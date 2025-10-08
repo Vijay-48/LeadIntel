@@ -203,55 +203,55 @@ async def search_apollo_contacts(query: str) -> List[dict]:
     """Search contacts using Apollo.io API - Demo version for free plan"""
     try:
         # Free plan has limited access, so we provide demo data
-        logger.info(f\"Generating demo contact data for query: {query}\")
+        logger.info(f"Generating demo contact data for query: {query}")
         
         # Generate realistic demo contacts
         demo_contacts = [
             {
-                \"first_name\": \"John\",
-                \"last_name\": \"Smith\",
-                \"title\": \"CEO\",
-                \"email\": f\"john.smith@{query.lower().replace(' ', '')}.com\",
-                \"phone\": \"+1 (555) 123-4567\",
-                \"company\": query,
-                \"industry\": \"Technology\",
-                \"location\": \"San Francisco, CA\"
+                "first_name": "John",
+                "last_name": "Smith",
+                "title": "CEO",
+                "email": f"john.smith@{query.lower().replace(' ', '')}.com",
+                "phone": "+1 (555) 123-4567",
+                "company": query,
+                "industry": "Technology",
+                "location": "San Francisco, CA"
             },
             {
-                \"first_name\": \"Sarah\",
-                \"last_name\": \"Johnson\",
-                \"title\": \"VP of Sales\",
-                \"email\": f\"sarah.johnson@{query.lower().replace(' ', '')}.com\",
-                \"phone\": \"+1 (555) 234-5678\",
-                \"company\": query,
-                \"industry\": \"Technology\",
-                \"location\": \"New York, NY\"
+                "first_name": "Sarah",
+                "last_name": "Johnson",
+                "title": "VP of Sales",
+                "email": f"sarah.johnson@{query.lower().replace(' ', '')}.com",
+                "phone": "+1 (555) 234-5678",
+                "company": query,
+                "industry": "Technology",
+                "location": "New York, NY"
             },
             {
-                \"first_name\": \"Michael\",
-                \"last_name\": \"Chen\",
-                \"title\": \"Marketing Director\",
-                \"email\": f\"michael.chen@{query.lower().replace(' ', '')}.com\",
-                \"phone\": \"+1 (555) 345-6789\",
-                \"company\": query,
-                \"industry\": \"Technology\",
-                \"location\": \"Austin, TX\"
+                "first_name": "Michael",
+                "last_name": "Chen",
+                "title": "Marketing Director",
+                "email": f"michael.chen@{query.lower().replace(' ', '')}.com",
+                "phone": "+1 (555) 345-6789",
+                "company": query,
+                "industry": "Technology",
+                "location": "Austin, TX"
             }
         ]
         
         results = []
         for contact in demo_contacts:
             lead = LeadData(
-                source=\"apollo_demo\",
+                source="apollo_demo",
                 company_name=contact['company'],
                 industry=contact['industry'],
-                website=f\"https://www.{query.lower().replace(' ', '')}.com\",
+                website=f"https://www.{query.lower().replace(' ', '')}.com",
                 location=contact['location'],
-                employee_count=\"1000+\",
-                contact_name=f\"{contact['first_name']} {contact['last_name']}\",
+                employee_count="1000+",
+                contact_name=f"{contact['first_name']} {contact['last_name']}",
                 contact_email=contact['email'],
                 contact_phone=contact['phone'],
-                company_domain=f\"{query.lower().replace(' ', '')}.com\"
+                company_domain=f"{query.lower().replace(' ', '')}.com"
             )
             results.append(lead.model_dump())
             
@@ -264,14 +264,14 @@ async def search_apollo_contacts(query: str) -> List[dict]:
         return results
             
     except Exception as e:
-        logger.error(f\"Apollo contacts search error: {str(e)}\")
+        logger.error(f"Apollo contacts search error: {str(e)}")
         # Fallback
         lead = LeadData(
-            source=\"apollo_demo\",
+            source="apollo_demo",
             company_name=query,
-            contact_name=\"Demo Contact\",
-            contact_email=f\"contact@{query.lower().replace(' ', '')}.com\",
-            industry=\"Demo Data\"
+            contact_name="Demo Contact",
+            contact_email=f"contact@{query.lower().replace(' ', '')}.com",
+            industry="Demo Data"
         )
         return [lead.model_dump()]
 

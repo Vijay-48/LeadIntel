@@ -86,10 +86,10 @@ async def search_apollo_companies(query: str) -> List[dict]:
         url = "https://api.apollo.io/v1/mixed_companies/search"
         headers = {
             "Content-Type": "application/json",
-            "Cache-Control": "no-cache"
+            "Cache-Control": "no-cache",
+            "X-Api-Key": APOLLO_API_KEY
         }
         payload = {
-            "api_key": APOLLO_API_KEY,
             "q_organization_name": query,
             "page": 1,
             "per_page": 25

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
 import { BackgroundPaths } from "@/components/ui/background-paths";
 import { TestimonialCard } from "@/components/ui/testimonial-card";
@@ -12,7 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import { Search, Download, RefreshCw, Database, Users, Building2, Mail, Phone, Globe, MapPin, TrendingUp } from "lucide-react";
+import { Search, Download, RefreshCw, Database, Users, Building2, Mail, Phone, Globe, MapPin, TrendingUp, Sparkles } from "lucide-react";
+import EnrichmentSearch from "@/components/EnrichmentSearch";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

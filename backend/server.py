@@ -16,6 +16,10 @@ import pandas as pd
 from io import StringIO, BytesIO
 import json
 
+# Import our new services
+from data_loader import DataLoader
+from enrichment_service import EnrichmentService
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
@@ -23,6 +27,10 @@ load_dotenv(ROOT_DIR / '.env')
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
+
+# Initialize services
+data_loader = DataLoader(db)
+enrichment_service = EnrichmentService(db)
 
 # Create the main app without a prefix
 app = FastAPI()

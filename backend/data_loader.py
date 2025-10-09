@@ -98,13 +98,11 @@ class DataLoader:
                     
                     # Bulk insert
                     operations = [
-                        {
-                            'updateOne': {
-                                'filter': {'id': item.get('id')},
-                                'update': {'$set': item},
-                                'upsert': True
-                            }
-                        }
+                        UpdateOne(
+                            {'id': item.get('id')},
+                            {'$set': item},
+                            upsert=True
+                        )
                         for item in batch if item.get('id')
                     ]
                     if operations:

@@ -187,19 +187,22 @@ class DataLoader:
             if employees_csv.exists():
                 logger.info("Loading employee_counts.csv...")
                 df = pd.read_csv(employees_csv)
-                df['company_id'] = df['company_id'].astype(str)
+                df = df.replace({pd.NA: None, pd.NaT: None})
+                df = df.where(pd.notna(df), None)
+                df['company_id'] = df['company_id'].apply(lambda x: str(x) if x is not None else None)
                 records = df.to_dict('records')
                 
                 for record in records:
-                    await self.db.linkedin_companies.update_one(
-                        {'company_id': record['company_id']},
-                        {'$set': {
-                            'employee_count': record.get('employee_count'),
-                            'follower_count': record.get('follower_count'),
-                            'time_recorded': record.get('time_recorded')
-                        }},
-                        upsert=False
-                    )
+                    if record.get('company_id') and record['company_id'] != 'None':
+                        await self.db.linkedin_companies.update_one(
+                            {'company_id': record['company_id']},
+                            {'$set': {
+                                'employee_count': record.get('employee_count'),
+                                'follower_count': record.get('follower_count'),
+                                'time_recorded': record.get('time_recorded')
+                            }},
+                            upsert=False
+                        )
                 logger.info(f"Updated employee counts for companies")
             
             # Load job_postings.csv

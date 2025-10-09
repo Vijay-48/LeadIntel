@@ -57,6 +57,23 @@ const Home = ({ onNavigate }) => {
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
               Automate lead generation with powerful data extraction from Apollo.io, Crunchbase, and LinkedIn
             </p>
+            
+            {/* Navigation Buttons */}
+            <div className="flex gap-4 justify-center mt-8">
+              <Button 
+                onClick={() => onNavigate('dashboard')}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <Database className="w-4 h-4 mr-2" />
+                Classic Dashboard
+              </Button>
+              <Link to="/enrichment">
+                <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Enrichment Search (NEW)
+                </Button>
+              </Link>
+            </div>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8 mb-24">

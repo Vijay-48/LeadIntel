@@ -125,6 +125,9 @@ class DataLoader:
             if companies_csv.exists():
                 logger.info("Loading companies.csv...")
                 df = pd.read_csv(companies_csv)
+                # Replace NaN with None
+                df = df.replace({pd.NA: None, pd.NaT: None})
+                df = df.where(pd.notna(df), None)
                 records = df.to_dict('records')
                 
                 for record in records:
@@ -132,14 +135,15 @@ class DataLoader:
                     record['_loaded_at'] = datetime.utcnow().isoformat()
                     
                     # Convert company_id to string for consistency
-                    if 'company_id' in record:
+                    if 'company_id' in record and record['company_id'] is not None:
                         record['company_id'] = str(record['company_id'])
                     
-                    await self.db.linkedin_companies.update_one(
-                        {'company_id': record.get('company_id')},
-                        {'$set': record},
-                        upsert=True
-                    )
+                    if record.get('company_id') and record['company_id'] != 'None':
+                        await self.db.linkedin_companies.update_one(
+                            {'company_id': record.get('company_id')},
+                            {'$set': record},
+                            upsert=True
+                        )
                 logger.info(f"Loaded {len(records)} records from companies.csv")
             
             # Load company_industries.csv

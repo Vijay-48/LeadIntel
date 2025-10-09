@@ -624,6 +624,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+async def startup_event():
+    """Load data on startup if not already loaded"""
+    try:
+        logger.info("Starting up - checking data status...")
+        crunchbase_count = await db.crunchbase_companies.count_documents({})
+        linkedin_count = await db.linkedin_companies.count_documents({})
+        
+        if crunchbase_count == 0 and linkedin_count == 0:
+            logger.info("No data found - starting data load process...")
+            # Load data in background to not block startup
+            asyncio.create_task(data_loader.load_all_data())
+        else:
+            logger.info(f"Data already loaded: {crunchbase_count} Crunchbase, {linkedin_count} LinkedIn companies")
+    except Exception as e:
+        logger.error(f"Startup error: {str(e)}")
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()

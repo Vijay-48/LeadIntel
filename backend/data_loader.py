@@ -61,15 +61,35 @@ class DataLoader:
                 logger.info(f"Loaded {len(data)} records from crunchbase-company-profiles.json")
             
             # Load large companies.json (process in chunks)
+            # Handle both JSON array and newline-delimited JSON (NDJSON)
             companies_file = DATA_DIR / 'companies.json'
             if companies_file.exists():
                 logger.info("Loading companies.json (large file)...")
-                with open(companies_file, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
+                
+                try:
+                    # Try loading as JSON array first
+                    with open(companies_file, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                except json.JSONDecodeError:
+                    # If that fails, try loading as NDJSON (newline-delimited JSON)
+                    logger.info("Loading as NDJSON (newline-delimited JSON)...")
+                    data = []
+                    with open(companies_file, 'r', encoding='utf-8') as f:
+                        for line_num, line in enumerate(f, 1):
+                            line = line.strip()
+                            if line:
+                                try:
+                                    data.append(json.loads(line))
+                                except json.JSONDecodeError as e:
+                                    logger.warning(f"Skipping invalid JSON at line {line_num}: {str(e)}")
+                                    continue
                     
                 # Process in batches of 1000
                 batch_size = 1000
-                for i in range(0, len(data), batch_size):
+                total_records = len(data)
+                logger.info(f"Total records to process: {total_records}")
+                
+                for i in range(0, total_records, batch_size):
                     batch = data[i:i+batch_size]
                     for item in batch:
                         item['_data_source'] = 'crunchbase_companies'
@@ -84,14 +104,14 @@ class DataLoader:
                                 'upsert': True
                             }
                         }
-                        for item in batch
+                        for item in batch if item.get('id')
                     ]
                     if operations:
                         await self.db.crunchbase_companies.bulk_write(operations)
                     
-                    logger.info(f"Processed {min(i+batch_size, len(data))}/{len(data)} records from companies.json")
+                    logger.info(f"Processed {min(i+batch_size, total_records)}/{total_records} records from companies.json")
                 
-                logger.info(f"Loaded {len(data)} records from companies.json")
+                logger.info(f"Loaded {total_records} records from companies.json")
                 
         except Exception as e:
             logger.error(f"Error loading Crunchbase JSON data: {str(e)}")

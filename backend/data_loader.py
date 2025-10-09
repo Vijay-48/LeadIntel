@@ -207,15 +207,21 @@ class DataLoader:
                 total_loaded = 0
                 
                 for chunk in pd.read_csv(jobs_csv, chunksize=chunk_size):
-                    chunk['company_id'] = chunk['company_id'].astype(str)
-                    chunk['job_id'] = chunk['job_id'].astype(str)
+                    # Replace NaN with None for MongoDB compatibility
+                    chunk = chunk.replace({pd.NA: None, pd.NaT: None})
+                    chunk = chunk.where(pd.notna(chunk), None)
+                    
+                    # Convert IDs to string, handling NaN
+                    chunk['company_id'] = chunk['company_id'].apply(lambda x: str(x) if x is not None and not pd.isna(x) else None)
+                    chunk['job_id'] = chunk['job_id'].apply(lambda x: str(x) if x is not None and not pd.isna(x) else None)
+                    
                     records = chunk.to_dict('records')
                     
                     for record in records:
                         record['_data_source'] = 'linkedin_jobs'
                         record['_loaded_at'] = datetime.utcnow().isoformat()
                     
-                    # Bulk insert
+                    # Bulk insert - only insert records with valid job_id
                     operations = [
                         {
                             'updateOne': {
@@ -224,13 +230,14 @@ class DataLoader:
                                 'upsert': True
                             }
                         }
-                        for record in records if record.get('job_id')
+                        for record in records if record.get('job_id') and record.get('job_id') != 'None'
                     ]
                     if operations:
                         await self.db.linkedin_jobs.bulk_write(operations)
                     
                     total_loaded += len(records)
-                    logger.info(f"Loaded {total_loaded} job postings...")
+                    if total_loaded % 50000 == 0:
+                        logger.info(f"Loaded {total_loaded} job postings...")
                 
                 logger.info(f"Finished loading {total_loaded} records from job_postings.csv")
                 

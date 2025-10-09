@@ -84,6 +84,18 @@ class LeadData(BaseModel):
 class ExportRequest(BaseModel):
     data: List[dict]
 
+class EnrichmentSearchRequest(BaseModel):
+    query: Optional[str] = None
+    industry: Optional[str] = None
+    location: Optional[str] = None
+    min_employees: Optional[int] = None
+    max_employees: Optional[int] = None
+    limit: int = 50
+
+class CompanyJobsRequest(BaseModel):
+    company_id: Optional[str] = None
+    company_name: Optional[str] = None
+
 # ============================================================================
 # APOLLO.IO INTEGRATION
 # ============================================================================

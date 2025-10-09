@@ -423,7 +423,87 @@ async def scrape_linkedin(query: str, search_type: str) -> List[dict]:
 
 @api_router.get("/")
 async def root():
-    return {"message": "LeadIntel API v1.0"}
+    return {"message": "LeadIntel API v1.0 - Enhanced with Multi-Source Enrichment"}
+
+@api_router.get("/data/status")
+async def data_status():
+    """Get status of loaded data"""
+    try:
+        crunchbase_count = await db.crunchbase_companies.count_documents({})
+        linkedin_count = await db.linkedin_companies.count_documents({})
+        jobs_count = await db.linkedin_jobs.count_documents({})
+        
+        return {
+            "status": "loaded" if crunchbase_count > 0 or linkedin_count > 0 else "empty",
+            "crunchbase_companies": crunchbase_count,
+            "linkedin_companies": linkedin_count,
+            "job_postings": jobs_count
+        }
+    except Exception as e:
+        logger.error(f"Error getting data status: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/data/load")
+async def load_data():
+    """Trigger data loading from files into MongoDB"""
+    try:
+        await data_loader.load_all_data()
+        return {"message": "Data loaded successfully"}
+    except Exception as e:
+        logger.error(f"Error loading data: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/enrichment/search")
+async def enrichment_search(request: EnrichmentSearchRequest):
+    """
+    Search companies across all data sources with enrichment
+    Returns: List of enriched company data with:
+    - Email
+    - LinkedIn profiles
+    - Contact numbers
+    - Company name
+    - Prospect names
+    - And more...
+    """
+    try:
+        results = await enrichment_service.search_companies(
+            query=request.query,
+            industry=request.industry,
+            location=request.location,
+            min_employees=request.min_employees,
+            max_employees=request.max_employees,
+            limit=request.limit
+        )
+        
+        return {
+            "results": results,
+            "count": len(results),
+            "filters": {
+                "query": request.query,
+                "industry": request.industry,
+                "location": request.location
+            }
+        }
+    except Exception as e:
+        logger.error(f"Enrichment search error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/enrichment/jobs")
+async def get_company_jobs(request: CompanyJobsRequest):
+    """Get job postings for a specific company"""
+    try:
+        jobs = await enrichment_service.get_company_jobs(
+            company_id=request.company_id,
+            company_name=request.company_name
+        )
+        
+        return {
+            "results": jobs,
+            "count": len(jobs)
+        }
+    except Exception as e:
+        logger.error(f"Get company jobs error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.post("/apollo/search")
 async def apollo_search(request: ApolloSearchRequest):

@@ -231,13 +231,11 @@ class DataLoader:
                     
                     # Bulk insert - only insert records with valid job_id
                     operations = [
-                        {
-                            'updateOne': {
-                                'filter': {'job_id': record.get('job_id')},
-                                'update': {'$set': record},
-                                'upsert': True
-                            }
-                        }
+                        UpdateOne(
+                            {'job_id': record.get('job_id')},
+                            {'$set': record},
+                            upsert=True
+                        )
                         for record in records if record.get('job_id') and record.get('job_id') != 'None'
                     ]
                     if operations:

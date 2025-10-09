@@ -382,8 +382,10 @@ function App() {
               ? <Home onNavigate={setCurrentView} /> 
               : <Dashboard />
           } />
+          <Route path="/enrichment" element={<EnrichmentSearch />} />
         </Routes>
       </BrowserRouter>
+      <Toaster position="top-right" />
     </div>
   );
 }

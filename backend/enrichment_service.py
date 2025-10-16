@@ -49,8 +49,12 @@ class EnrichmentService:
                 {'data_source': {'$in': ['apollo_csv', 'apollo_csv_companies']}, **apollo_filter}
             ).limit(limit // 3).to_list(length=limit // 3)
             
-            # Apollo CSV data is already in enriched format, just add to results
-            results.extend(apollo_data)
+            # Apollo CSV data is already in enriched format, clean ObjectId and add to results
+            for item in apollo_data:
+                # Remove MongoDB _id field
+                if '_id' in item:
+                    del item['_id']
+                results.append(item)
             
             # Search in Crunchbase data
             crunchbase_filter = {}

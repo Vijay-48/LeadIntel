@@ -40,6 +40,16 @@ export interface DataStatus {
   job_postings: number;
 }
 
+export interface PersonDetail {
+  first_name: string;
+  last_name: string;
+  organization_name: string;
+}
+
+export interface EnrichContactsRequest {
+  details: PersonDetail[];
+}
+
 export const apiService = {
   async getDataStatus(): Promise<DataStatus> {
     const response = await api.get('/data/status');
@@ -53,6 +63,11 @@ export const apiService = {
 
   async loadData(): Promise<void> {
     await api.post('/data/load');
+  },
+
+  async enrichContacts(request: EnrichContactsRequest): Promise<{ people: any[]; count: number }> {
+    const response = await api.post('/apollo/bulk_match', request);
+    return response.data;
   },
 };
 

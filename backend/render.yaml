@@ -1,0 +1,21 @@
+services:
+  # Backend API Service
+  - type: web
+    name: leadintel-backend
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn server:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: MONGO_URL
+        sync: false  # You'll need to set this in Render dashboard
+      - key: DB_NAME
+        value: leadintel_db
+      - key: CORS_ORIGINS
+        value: "*"  # Update with your frontend URL after deployment
+      - key: APOLLO_API_KEY
+        sync: false  # Optional - set in Render dashboard if you have one
+      - key: PYTHON_VERSION
+        value: "3.11.0"

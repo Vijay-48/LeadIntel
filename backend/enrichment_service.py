@@ -26,6 +26,32 @@ class EnrichmentService:
         try:
             results = []
             
+            # Search in Apollo CSV data (new enriched data)
+            apollo_filter = {}
+            if query:
+                apollo_filter['$or'] = [
+                    {'company_name': {'$regex': query, '$options': 'i'}},
+                    {'website': {'$regex': query, '$options': 'i'}},
+                    {'enrichment_fields.company_name': {'$regex': query, '$options': 'i'}},
+                    {'all_prospects.name': {'$regex': query, '$options': 'i'}},
+                ]
+            
+            if industry:
+                apollo_filter['industry'] = {'$regex': industry, '$options': 'i'}
+            
+            if location:
+                apollo_filter['$or'] = apollo_filter.get('$or', []) + [
+                    {'location': {'$regex': location, '$options': 'i'}},
+                ]
+            
+            # Query enriched_data collection for Apollo CSV data
+            apollo_data = await self.db.enriched_data.find(
+                {'data_source': {'$in': ['apollo_csv', 'apollo_csv_companies']}, **apollo_filter}
+            ).limit(limit // 3).to_list(length=limit // 3)
+            
+            # Apollo CSV data is already in enriched format, just add to results
+            results.extend(apollo_data)
+            
             # Search in Crunchbase data
             crunchbase_filter = {}
             if query:
@@ -48,7 +74,7 @@ class EnrichmentService:
             
             crunchbase_companies = await self.db.crunchbase_companies.find(
                 crunchbase_filter
-            ).limit(limit).to_list(length=limit)
+            ).limit(limit // 3).to_list(length=limit // 3)
             
             # Process Crunchbase results
             for company in crunchbase_companies:
@@ -76,7 +102,7 @@ class EnrichmentService:
             
             linkedin_companies = await self.db.linkedin_companies.find(
                 linkedin_filter
-            ).limit(limit).to_list(length=limit)
+            ).limit(limit // 3).to_list(length=limit // 3)
             
             # Process LinkedIn results
             for company in linkedin_companies:

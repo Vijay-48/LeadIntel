@@ -663,10 +663,17 @@ async def get_cached_leads():
 # Include the router in the main app
 app.include_router(api_router)
 
+# CORS Configuration
+cors_origins_str = os.environ.get('CORS_ORIGINS', '*')
+if cors_origins_str == '*':
+    allow_origins = ['*']
+else:
+    allow_origins = [origin.strip() for origin in cors_origins_str.split(',')]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_credentials=True if allow_origins != ['*'] else False,
+    allow_origins=allow_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

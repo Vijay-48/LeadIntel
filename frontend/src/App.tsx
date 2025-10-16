@@ -1,31 +1,13 @@
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { HeroGeometric } from './components/ui/shape-landing-hero';
-import { Dashboard } from './components/Dashboard';
-
-function LandingPage() {
-  const navigate = useNavigate();
-
-  const handleGetStarted = () => {
-    navigate('/dashboard');
-  };
-
-  return (
-    <HeroGeometric
-      badge="LeadIntel"
-      title1="Unlock Intelligent"
-      title2="Lead Data Instantly"
-      subtitle="Discover and enrich company data with real-time insights. Access comprehensive contact information, funding details, and industry intelligence—all in one powerful platform."
-      onGetStarted={handleGetStarted}
-    />
-  );
-}
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HeroLanding } from './components/HeroLanding';
+import { NewDashboard } from './components/NewDashboard';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/" element={<HeroLanding />} />
+        <Route path="/dashboard" element={<NewDashboard />} />
       </Routes>
     </Router>
   );

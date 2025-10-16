@@ -519,6 +519,51 @@ async def apollo_search(request: ApolloSearchRequest):
         logger.error(f"Apollo search endpoint error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+class PersonDetail(BaseModel):
+    first_name: str
+    last_name: str
+    organization_name: str
+
+class ApolloBulkMatchRequest(BaseModel):
+    details: List[PersonDetail]
+
+@api_router.post("/apollo/bulk_match")
+async def apollo_bulk_match(request: ApolloBulkMatchRequest):
+    """Enrich people data using Apollo.io bulk match API"""
+    try:
+        url = "https://api.apollo.io/api/v1/people/bulk_match?reveal_personal_emails=false&reveal_phone_number=false"
+        
+        headers = {
+            "accept": "application/json",
+            "Cache-Control": "no-cache",
+            "Content-Type": "application/json",
+            "x-api-key": APOLLO_API_KEY
+        }
+        
+        payload = {
+            "details": [person.model_dump() for person in request.details]
+        }
+        
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+        
+        data = response.json()
+        people = data.get("people", [])
+        
+        logger.info(f"Apollo bulk match returned {len(people)} enriched profiles")
+        
+        return {
+            "people": people,
+            "count": len(people),
+            "source": "apollo"
+        }
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Apollo bulk match API error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Apollo API error: {str(e)}")
+    except Exception as e:
+        logger.error(f"Apollo bulk match endpoint error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.post("/crunchbase/search")
 async def crunchbase_search(request: CrunchbaseSearchRequest):
     """Scrape Crunchbase for company data"""

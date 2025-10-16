@@ -432,11 +432,13 @@ async def data_status():
         crunchbase_count = await db.crunchbase_companies.count_documents({})
         linkedin_count = await db.linkedin_companies.count_documents({})
         jobs_count = await db.linkedin_jobs.count_documents({})
+        apollo_csv_count = await db.enriched_data.count_documents({'data_source': {'$in': ['apollo_csv', 'apollo_csv_companies']}})
         
         return {
-            "status": "loaded" if crunchbase_count > 0 or linkedin_count > 0 else "empty",
+            "status": "loaded" if crunchbase_count > 0 or linkedin_count > 0 or apollo_csv_count > 0 else "empty",
             "crunchbase_companies": crunchbase_count,
             "linkedin_companies": linkedin_count,
+            "apollo_csv_people": apollo_csv_count,
             "job_postings": jobs_count
         }
     except Exception as e:

@@ -90,15 +90,34 @@ export function NewDashboard() {
   const extractContacts = () => {
     const contacts: any[] = [];
     companies.forEach(company => {
-      if (company.prospect_full_name) {
-        const names = company.prospect_full_name.split(',').map(n => n.trim());
+      // Check enrichment_fields first
+      const enrichmentFields = company.enrichment_fields;
+      const prospectName = enrichmentFields?.prospect_full_name || company.prospect_full_name;
+      
+      if (company.all_prospects && company.all_prospects.length > 0) {
+        // Use all_prospects if available
+        company.all_prospects.forEach(prospect => {
+          contacts.push({
+            name: prospect.name,
+            title: prospect.title,
+            company: company.company_name,
+            email: enrichmentFields?.email || company.email,
+            phone: enrichmentFields?.contact_number || company.contact_number,
+            linkedin: enrichmentFields?.linkedin || company.linkedin,
+            industry: company.industry,
+            location: company.location,
+          });
+        });
+      } else if (prospectName) {
+        // Fallback to prospect_full_name
+        const names = prospectName.split(',').map(n => n.trim());
         names.forEach(name => {
           contacts.push({
             name,
             company: company.company_name,
-            email: company.email,
-            phone: company.contact_number,
-            linkedin: company.linkedin,
+            email: enrichmentFields?.email || company.email,
+            phone: enrichmentFields?.contact_number || company.contact_number,
+            linkedin: enrichmentFields?.linkedin || company.linkedin,
             industry: company.industry,
             location: company.location,
           });

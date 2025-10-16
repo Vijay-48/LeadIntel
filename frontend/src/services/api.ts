@@ -31,6 +31,19 @@ export interface CompanyData {
   description?: string;
   funding?: string;
   data_source?: string;
+  enrichment_fields?: {
+    email?: string;
+    linkedin?: string;
+    contact_number?: string;
+    company_name?: string;
+    prospect_full_name?: string;
+  };
+  all_prospects?: Array<{
+    name: string;
+    title?: string;
+    linkedin_id?: string;
+    departments?: string[];
+  }>;
 }
 
 export interface DataStatus {

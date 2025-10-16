@@ -306,3 +306,16 @@ class EnrichmentService:
         except Exception as e:
             logger.error(f"Error getting company jobs: {str(e)}")
             return []
+    
+    def _sanitize_data(self, data):
+        """Sanitize data to prevent JSON serialization errors with NaN/Infinity values"""
+        if isinstance(data, dict):
+            return {k: self._sanitize_data(v) for k, v in data.items()}
+        elif isinstance(data, list):
+            return [self._sanitize_data(item) for item in data]
+        elif isinstance(data, float):
+            if math.isnan(data) or math.isinf(data):
+                return None
+            return data
+        else:
+            return data

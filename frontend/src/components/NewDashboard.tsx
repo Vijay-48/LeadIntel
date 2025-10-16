@@ -149,7 +149,7 @@ export function NewDashboard() {
     }
   };
 
-  const totalCompanies = (stats?.crunchbase_companies || 0) + (stats?.linkedin_companies || 0);
+  const totalCompanies = (stats?.crunchbase_companies || 0) + (stats?.linkedin_companies || 0) + (stats?.apollo_csv_people || 0);
   const contactsData = extractContacts();
   const totalContacts = contactsData.length;
 

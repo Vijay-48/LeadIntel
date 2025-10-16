@@ -458,8 +458,8 @@ export function NewDashboard() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="text-lg font-bold text-white mb-1">{contact.name}</h3>
-                            {enrichedData?.title && (
-                              <p className="text-purple-400 text-sm mb-2">{enrichedData.title}</p>
+                            {(enrichedData?.title || contact.title) && (
+                              <p className="text-purple-400 text-sm mb-2">{enrichedData?.title || contact.title}</p>
                             )}
                             {contact.company && (
                               <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">

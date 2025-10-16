@@ -366,68 +366,71 @@ export function NewDashboard() {
             {activeTab === 'companies' && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {companies.length > 0 ? (
-                  companies.map((company, index) => (
-                    <div
-                      key={index}
-                      className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all group"
-                    >
-                      <div className="flex items-start justify-between mb-4">
-                        <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-colors">
-                          {company.company_name || 'Unknown Company'}
-                        </h3>
-                        {company.industry && (
-                          <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full">
-                            {company.industry.split(',')[0].trim()}
-                          </span>
-                        )}
+                  companies.map((company, index) => {
+                    const enrichment = company.enrichment_fields || {};
+                    return (
+                      <div
+                        key={index}
+                        className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all group"
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-colors">
+                            {company.company_name || 'Unknown Company'}
+                          </h3>
+                          {company.industry && (
+                            <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full">
+                              {company.industry.split(',')[0].trim()}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="space-y-3">
+                          {company.website && (
+                            <div className="flex items-center gap-2 text-gray-400">
+                              <Globe className="w-4 h-4 flex-shrink-0" />
+                              <a href={company.website} target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors truncate">
+                                {company.website}
+                              </a>
+                            </div>
+                          )}
+
+                          {company.location && (
+                            <div className="flex items-center gap-2 text-gray-400">
+                              <MapPin className="w-4 h-4 flex-shrink-0" />
+                              <span className="truncate">{company.location}</span>
+                            </div>
+                          )}
+
+                          {company.employee_count && (
+                            <div className="flex items-center gap-2 text-gray-400">
+                              <Users className="w-4 h-4 flex-shrink-0" />
+                              <span>{company.employee_count} employees</span>
+                            </div>
+                          )}
+
+                          {(enrichment.email || company.email) && (
+                            <div className="flex items-center gap-2 text-gray-400">
+                              <Mail className="w-4 h-4 flex-shrink-0" />
+                              <span className="truncate">{enrichment.email || company.email}</span>
+                            </div>
+                          )}
+
+                          {(enrichment.contact_number || company.contact_number) && (
+                            <div className="flex items-center gap-2 text-gray-400">
+                              <Phone className="w-4 h-4 flex-shrink-0" />
+                              <span>{enrichment.contact_number || company.contact_number}</span>
+                            </div>
+                          )}
+
+                          {company.description && (
+                            <p className="text-gray-500 text-sm mt-3 line-clamp-2">
+                              {company.description}
+                            </p>
+                          )}
+                        </div>
                       </div>
-
-                      <div className="space-y-3">
-                        {company.website && (
-                          <div className="flex items-center gap-2 text-gray-400">
-                            <Globe className="w-4 h-4 flex-shrink-0" />
-                            <a href={company.website} target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors truncate">
-                              {company.website}
-                            </a>
-                          </div>
-                        )}
-
-                        {company.location && (
-                          <div className="flex items-center gap-2 text-gray-400">
-                            <MapPin className="w-4 h-4 flex-shrink-0" />
-                            <span className="truncate">{company.location}</span>
-                          </div>
-                        )}
-
-                        {company.employee_count && (
-                          <div className="flex items-center gap-2 text-gray-400">
-                            <Users className="w-4 h-4 flex-shrink-0" />
-                            <span>{company.employee_count} employees</span>
-                          </div>
-                        )}
-
-                        {company.email && (
-                          <div className="flex items-center gap-2 text-gray-400">
-                            <Mail className="w-4 h-4 flex-shrink-0" />
-                            <span className="truncate">{company.email}</span>
-                          </div>
-                        )}
-
-                        {company.contact_number && (
-                          <div className="flex items-center gap-2 text-gray-400">
-                            <Phone className="w-4 h-4 flex-shrink-0" />
-                            <span>{company.contact_number}</span>
-                          </div>
-                        )}
-
-                        {company.description && (
-                          <p className="text-gray-500 text-sm mt-3 line-clamp-2">
-                            {company.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ))
+                    );
+                  })
                 ) : (
                   <div className="col-span-2 text-center py-12 text-gray-400">
                     No companies found. Try adjusting your search or filters.

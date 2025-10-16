@@ -224,6 +224,9 @@ class EnrichmentService:
                 enriched['address'] = company.get('address')
                 enriched['zip_code'] = company.get('zip_code')
             
+            # Sanitize all float values to prevent JSON serialization errors
+            enriched = self._sanitize_data(enriched)
+            
             return enriched
             
         except Exception as e:

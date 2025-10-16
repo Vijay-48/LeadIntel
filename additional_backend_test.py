@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Get backend URL from environment
-BACKEND_URL = "https://dataview-7.preview.emergentagent.com/api"
+BACKEND_URL = "https://bugbuster-32.preview.emergentagent.com/api"
 
 def test_empty_params_search():
     """Test POST /api/enrichment/search with empty params - Should return initial data set (up to 50 companies)"""

@@ -221,7 +221,7 @@ export function NewDashboard() {
               </div>
               <div>
                 <p className="text-gray-400 text-sm">Data Sources</p>
-                <p className="text-white text-2xl font-bold">2</p>
+                <p className="text-white text-2xl font-bold">3</p>
               </div>
             </div>
           </div>

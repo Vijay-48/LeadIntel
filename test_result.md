@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the LeadIntel enrichment search functionality with various filters and validate response structure"
+user_problem_statement: "Create a modern Business Intelligence Dashboard with React, dark theme, glassmorphism effects, Hero landing page with animated shapes, and a dashboard that fetches enriched company data from the backend API"
 
 backend:
   - task: "GET /api/data/status endpoint"

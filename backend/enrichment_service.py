@@ -9,6 +9,24 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 
 logger = logging.getLogger(__name__)
 
+def clean_json_data(data):
+    """Remove NaN, Infinity, and ObjectId from data for JSON serialization"""
+    if isinstance(data, dict):
+        cleaned = {}
+        for key, value in data.items():
+            if key == '_id':
+                continue  # Skip MongoDB ObjectId
+            cleaned[key] = clean_json_data(value)
+        return cleaned
+    elif isinstance(data, list):
+        return [clean_json_data(item) for item in data]
+    elif isinstance(data, float):
+        if math.isnan(data) or math.isinf(data):
+            return None
+        return data
+    else:
+        return data
+
 class EnrichmentService:
     def __init__(self, db: AsyncIOMotorDatabase):
         self.db = db

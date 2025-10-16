@@ -297,12 +297,12 @@ All UI components from shadcn/ui:
 ### API Testing
 ```bash
 # Test Apollo search
-curl -X POST "https://bugbuster-32.preview.emergentagent.com/api/apollo/search" \
+curl -X POST "https://backend-debug-5.preview.emergentagent.com/api/apollo/search" \
   -H "Content-Type: application/json" \
   -d '{"query": "Google", "search_type": "company"}'
 
 # Test export
-curl -X POST "https://bugbuster-32.preview.emergentagent.com/api/export/txt" \
+curl -X POST "https://backend-debug-5.preview.emergentagent.com/api/export/txt" \
   -H "Content-Type: application/json" \
   -d '{"data": [{"company_name": "Test", "industry": "Tech"}]}' \
   -o export.txt
@@ -396,7 +396,7 @@ This project is proprietary software. All rights reserved.
 
 1. **Access the Application**
    ```
-   https://bugbuster-32.preview.emergentagent.com
+   https://backend-debug-5.preview.emergentagent.com
    ```
 
 2. **Click "Discover Excellence"** on the hero page

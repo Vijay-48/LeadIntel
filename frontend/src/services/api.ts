@@ -50,6 +50,7 @@ export interface DataStatus {
   status: string;
   crunchbase_companies: number;
   linkedin_companies: number;
+  apollo_csv_people: number;
   job_postings: number;
 }
 

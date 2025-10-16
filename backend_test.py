@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 
 # Get backend URL from environment
-BACKEND_URL = "https://datahub-search.preview.emergentagent.com/api"
+BACKEND_URL = "https://dataview-7.preview.emergentagent.com/api"
 
 class LeadIntelTester:
     def __init__(self):

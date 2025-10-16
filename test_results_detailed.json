@@ -3,60 +3,60 @@
     "test": "Data Status Endpoint",
     "status": "PASS",
     "details": "Status: loaded, Crunchbase: 52, LinkedIn: 6063",
-    "timestamp": "2025-10-09T12:07:24.620308"
+    "timestamp": "2025-10-16T06:36:52.709649"
   },
   {
     "test": "Data Loading",
     "status": "SKIP",
     "details": "Data already loaded",
-    "timestamp": "2025-10-09T12:07:24.673708"
+    "timestamp": "2025-10-16T06:36:52.756639"
   },
   {
     "test": "Enrichment Fields Validation - Apple search",
     "status": "PASS",
     "details": "All required enrichment fields present",
-    "timestamp": "2025-10-09T12:07:24.736268"
+    "timestamp": "2025-10-16T06:36:52.805295"
   },
   {
     "test": "Enrichment Search - Company Name",
     "status": "PASS",
     "details": "Found 10 results with proper enrichment fields",
-    "timestamp": "2025-10-09T12:07:24.736296"
+    "timestamp": "2025-10-16T06:36:52.805312"
   },
   {
     "test": "Enrichment Fields Validation - Technology industry search",
     "status": "PASS",
     "details": "All required enrichment fields present",
-    "timestamp": "2025-10-09T12:07:24.795802"
+    "timestamp": "2025-10-16T06:36:52.849053"
   },
   {
     "test": "Enrichment Search - Industry",
     "status": "PASS",
     "details": "Found 10 results with proper enrichment fields",
-    "timestamp": "2025-10-09T12:07:24.795829"
+    "timestamp": "2025-10-16T06:36:52.849069"
   },
   {
     "test": "Enrichment Fields Validation - California location search",
     "status": "PASS",
     "details": "All required enrichment fields present",
-    "timestamp": "2025-10-09T12:07:24.847086"
+    "timestamp": "2025-10-16T06:36:52.890130"
   },
   {
     "test": "Enrichment Search - Location",
     "status": "PASS",
     "details": "Found 10 results with proper enrichment fields",
-    "timestamp": "2025-10-09T12:07:24.847115"
+    "timestamp": "2025-10-16T06:36:52.890148"
   },
   {
     "test": "Enrichment Fields Validation - Combined search",
     "status": "PASS",
     "details": "All required enrichment fields present",
-    "timestamp": "2025-10-09T12:07:24.894781"
+    "timestamp": "2025-10-16T06:36:52.930374"
   },
   {
     "test": "Enrichment Search - Combined",
     "status": "PASS",
     "details": "Found 5 results with proper enrichment fields",
-    "timestamp": "2025-10-09T12:07:24.894806"
+    "timestamp": "2025-10-16T06:36:52.930391"
   }
 ]
